@@ -1,16 +1,17 @@
 <template>
-    <div class="day">
-      <h3>{{ day }}</h3>
-      <ul>
-        <li v-for="(subject, index) in subjects" :key="index">
-          <label>
-            <input type="checkbox" v-model="subject.selected">
-            <span>{{ subject.name }}</span>
-          </label>
-        </li>
-      </ul>
-    </div>
-  </template>
+  <div class="day">
+    <h3>{{ day }}</h3>
+    <ul>
+      <li v-for="(subject, index) in subjects" :key="index">
+        <label>
+          <input type="checkbox" v-model="subject.selected">
+          <span class="time-span">{{ subject.startTime }} - {{ subject.endTime }}</span> 
+          <span class="subject-name">{{ subject.name }}</span>
+        </label>
+      </li>
+    </ul>
+  </div>
+</template>
   
   <script>
 export default {
@@ -54,4 +55,9 @@ input[type="checkbox"] {
 span {
   word-break: break-word;
 }
+
+.time-span {
+  margin-right: 10px;
+}
+
 </style>

@@ -4,10 +4,12 @@
       <h1>Vivien's School Timetable</h1>
       <form @submit.prevent="addSubject" class="inline-form">
         <select v-model="newSubject.day">
-          <option value="" disabled selected>Select a day</option>
+          <option value="disabled selected" >Select a day</option>
           <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
         </select>
         <input v-model="newSubject.name" placeholder="Subject" required>
+        <input type="time" v-model="newSubject.startTime" required> <!-- Start Time -->
+        <input type="time" v-model="newSubject.endTime" required> <!-- End Time -->
         <button type="submit">Add</button>
       </form>
     </div>
@@ -44,23 +46,30 @@ export default {
       },
       newSubject: {
         day: '',
-        name: ''
+        name: '',
+        startTime: '', 
+        endTime: '' 
       }
     }
   },
   methods: {
     addSubject() {
-      if (this.newSubject.day && this.newSubject.name) {
+      if (this.newSubject.day && this.newSubject.name && this.newSubject.startTime && this.newSubject.endTime) {
         this.timetable[this.newSubject.day].push({
           name: this.newSubject.name,
-          selected: false
+          selected: false,
+          startTime: this.newSubject.startTime, 
+          endTime: this.newSubject.endTime 
         });
-        this.newSubject.name = '';
+
+        this.timetable[this.newSubject.day].sort((a, b) => {return a.startTime.localeCompare(b.startTime);
+      });
+        this.newSubject = { day: '', name: '', startTime: '', endTime: '' };
       }
     },
-    removeSelectedSubjects(day) {
+    removeSelectedSubjects() {
       for (let day of this.days) {
-      this.timetable[day] = this.timetable[day].filter(subject => !subject.selected);
+        this.timetable[day] = this.timetable[day].filter(subject => !subject.selected);
       }
     }
   }
