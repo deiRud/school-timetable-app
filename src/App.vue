@@ -142,25 +142,29 @@ export default {
   background-color: #3374ff;
 }
 
+/* Styles for tablets and mobile devices */
 @media (max-width: 768px) {
-   .centered-content h1 {
-     font-size: 24px; 
-   }
-   .inline-form button {
-     width: auto; 
-   }
+  .centered-content h1 {
+    font-size: 24px; 
+  }
+  
+  .inline-form select,
+  .inline-form input,
+  .inline-form button {
+    width: 100%; 
+    padding: 10px; 
+  }
 }
 
+/* Styles for mobile devices */
 @media (max-width: 480px) {
-   .centered-content h1 {
-     font-size: 20px; 
-   }
-   .inline-form select,
-   .inline-form input,
-   .inline-form button {
-     width: auto;
-     padding-left:5px; 
-     padding-right :5px;
-   }
-} 
+  .centered-content h1 {
+    font-size: 20px; 
+  }
+  
+  .inline-form {
+    flex-direction: column; 
+    align-items: stretch; 
+  }
+}
 </style>
