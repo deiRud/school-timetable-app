@@ -141,4 +141,26 @@ export default {
 .remove-btn:hover {
   background-color: #3374ff;
 }
+
+@media (max-width: 768px) {
+   .centered-content h1 {
+     font-size: 24px; 
+   }
+   .inline-form button {
+     width: auto; 
+   }
+}
+
+@media (max-width: 480px) {
+   .centered-content h1 {
+     font-size: 20px; 
+   }
+   .inline-form select,
+   .inline-form input,
+   .inline-form button {
+     width: auto;
+     padding-left:5px; 
+     padding-right :5px;
+   }
+} 
 </style>
