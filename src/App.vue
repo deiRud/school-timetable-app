@@ -4,12 +4,13 @@
       <h1>Vivien's School Timetable</h1>
       <div v-if="selectedDay" class="selected-day-container">
         <h2 class="zoomed">{{ selectedDay }} Schedule</h2>
-        <form @submit.prevent="addSubject" class="inline-form">
+        <form @submit.prevent="addSubject" class="subject-form">
           <input v-model="newSubject.name" placeholder="Subject" required>
-        <input type="time" v-model="newSubject.startTime" required> 
-        <input type="time" v-model="newSubject.endTime" required>
-        <button type="submit">Add</button> 
+          <input type="time" v-model="newSubject.startTime" required> 
+          <input type="time" v-model="newSubject.endTime" required>
+          <button type="submit">Add</button> 
       </form>
+
       <Day 
           :day="selectedDay" 
           :subjects="timetable[selectedDay]"
@@ -92,6 +93,16 @@ export default {
 </script>
 
 <style scoped>
+
+.subject-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
 .centered-content {
   display: flex;
   flex-direction: column;
@@ -153,7 +164,9 @@ export default {
 
 .inline-form input,
 .inline-form button {
-  margin-right: 5px;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
 .inline-form select {
