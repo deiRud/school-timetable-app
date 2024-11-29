@@ -2,29 +2,38 @@
   <div>
    <div class="centered-content">
       <h1>Vivien's School Timetable</h1>
-      <form @submit.prevent="addSubject" class="inline-form">
-        <select v-model="newSubject.day">
-          <option value="disabled selected" >Select a day</option>
-          <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-        </select>
-        <input v-model="newSubject.name" placeholder="Subject" required>
-        <input type="time" v-model="newSubject.startTime" required> <!-- Start Time -->
-        <input type="time" v-model="newSubject.endTime" required> <!-- End Time -->
-        <button type="submit">Add</button>
+      <div v-if="selectedDay" class="selected-day-container">
+        <h2 class="zoomed">{{ selectedDay }} Schedule</h2>
+        <form @submit.prevent="addSubject" class="inline-form">
+          <input v-model="newSubject.name" placeholder="Subject" required>
+        <input type="time" v-model="newSubject.startTime" required> 
+        <input type="time" v-model="newSubject.endTime" required>
+        <button type="submit">Add</button> 
       </form>
-    </div>
-
-    <div class="timetable">
       <Day 
-        v-for="day in days" 
-        :key="day" 
-        :day="day" 
-        :subjects="timetable[day]"
-      />
+          :day="selectedDay" 
+          :subjects="timetable[selectedDay]"
+        />
+        <button @click="clearSelection">Back to Week View</button>
     </div>
 
-    <div class="remove-button-container">
-      <button @click="removeSelectedSubjects" class="remove-btn">Remove</button>
+    <div v-else>
+        <div class="carousel">
+          <div 
+            class="day" 
+            v-for="day in days" 
+            :key="day" 
+            @click="selectDay(day)"
+            :class="{ 'active': selectedDay === day }"
+          >
+            {{ day }}
+          </div>
+        </div>
+      </div>
+
+      <div class="remove-button-container">
+        <button @click="removeSelectedSubjects" class="remove-btn">Remove</button>
+      </div>
     </div>
   </div>
 </template>
@@ -45,31 +54,37 @@ export default {
         Friday: []
       },
       newSubject: {
-        day: '',
         name: '',
         startTime: '', 
         endTime: '' 
-      }
+      },
+      selectedDay: null
     }
   },
   methods: {
+    selectDay(day) {
+      this.selectedDay = day; 
+    },
+    clearSelection() {
+      this.selectedDay = null; 
+    },
     addSubject() {
-      if (this.newSubject.day && this.newSubject.name && this.newSubject.startTime && this.newSubject.endTime) {
-        this.timetable[this.newSubject.day].push({
+      if (this.selectedDay && this.newSubject.name) {
+        this.timetable[this.selectedDay].push({
           name: this.newSubject.name,
           selected: false,
           startTime: this.newSubject.startTime, 
           endTime: this.newSubject.endTime 
         });
 
-        this.timetable[this.newSubject.day].sort((a, b) => {return a.startTime.localeCompare(b.startTime);
+        this.timetable[this.selectedDay].sort((a, b) => {return a.startTime.localeCompare(b.startTime);
       });
-        this.newSubject = { day: '', name: '', startTime: '', endTime: '' };
+      this.newSubject = { name: '', startTime: '', endTime: '' };
       }
     },
     removeSelectedSubjects() {
-      for (let day of this.days) {
-        this.timetable[day] = this.timetable[day].filter(subject => !subject.selected);
+    if (this.selectedDay) {
+      this.timetable[this.selectedDay] = this.timetable[this.selectedDay].filter(subject => !subject.selected);
       }
     }
   }
@@ -87,20 +102,58 @@ export default {
   padding: 10px 0;
 }
 
+.selected-day-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.zoomed {
+  font-size: 2em; 
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto; 
+}
+.day {
+  flex-shrink: 0; 
+  width: 100px; 
+  margin-right: 10px; 
+  padding: 10px;
+  text-align: center;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.day:hover {
+  background-color: #e0e0e0; 
+}
+
+.active {
+  transform: scale(1.5); /* Zoom in the active day */
+  z-index: 1; /* Bring the active day to the front */
+}
+
 .inline-form {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 10px;
+}
+.subjects-container {
+  display: flex; 
+  flex-wrap: wrap;
+  justify-content: center; 
 }
 
-.inline-form select,
+.subject-item {
+  margin-right: 10px; 
+  padding: 5px;
+  background-color: #f0f0f0; 
+}
+
 .inline-form input,
 .inline-form button {
-  padding: 5px;
-  height: 40px;
+  margin-right: 5px;
 }
 
 .inline-form select {
