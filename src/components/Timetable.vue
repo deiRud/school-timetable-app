@@ -18,19 +18,27 @@
         <button @click="clearSelection">Back to Week View</button>
     </div>
 
-    <div v-else>
-        <div class="carousel">
-          <div 
-            class="day" 
-            v-for="day in days" 
-            :key="day" 
-            @click="selectDay(day)"
-            :class="{ 'active': selectedDay === day }"
-          >
-            {{ day }}
-          </div>
-        </div>
-      </div>
+    <div class="carousel">
+  <div 
+    class="day" 
+    v-for="day in days" 
+    :key="day" 
+    @click="selectDay(day)"
+    :class="{ 'active': selectedDay === day }"
+  >
+    {{ day }}
+    <ul>
+      <li 
+        v-for="subject in timetable[day]" 
+        :key="subject.name + subject.startTime"
+        class="subject-preview"
+      >
+        {{ subject.startTime }} - {{ subject.endTime }}: {{ subject.name }}
+      </li>
+    </ul>
+  </div>
+</div>
+
 
       <div class="remove-button-container">
         <button @click="removeSelectedSubjects" class="remove-btn">Remove</button>
@@ -125,25 +133,30 @@ export default {
 
 .carousel {
   display: flex;
-  overflow-x: auto; 
+  overflow-x: auto;   
+  gap: 20px;          
+  padding: 10px;     
 }
+
 .day {
-  flex-shrink: 0; 
-  width: 100px; 
-  margin-right: 10px; 
+  flex: 0 0 auto;
+  min-width: 200px;
   padding: 10px;
-  text-align: center;
   background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .day:hover {
-  background-color: #e0e0e0; 
+  background-color: #e0e0e0;
+  transform: scale(1.05);
 }
 
 .active {
-  transform: scale(1.5); /* Zoom in the active day */
-  z-index: 1; /* Bring the active day to the front */
+  border: 2px solid #2ca2f0;
+  background-color: #d0eaff;
 }
 
 .inline-form {
@@ -160,6 +173,11 @@ export default {
   margin-right: 10px; 
   padding: 5px;
   background-color: #f0f0f0; 
+}
+
+.subject-preview {
+  font-size: 0.9em;
+  text-align: left;
 }
 
 .inline-form input,
@@ -213,7 +231,27 @@ export default {
   .centered-content h1 {
     font-size: 24px; 
   }
+
+  .carousel {
+    flex-wrap: wrap;    
+    justify-content: center; 
+    overflow-x: hidden;  
+  }
   
+  .day {
+    min-width: 150px;     
+    margin: 5px;          
+    text-align: center;   
+  }
+
+  .zoomed {
+    font-size: 1.5em;     
+  }
+
+  .subject-preview {
+    font-size: 0.8em;     
+  }
+
   .inline-form select,
   .inline-form input,
   .inline-form button {
@@ -227,7 +265,28 @@ export default {
   .centered-content h1 {
     font-size: 20px; 
   }
-  
+
+  .carousel {
+    flex-direction: column;  
+    gap: 10px;               
+  }
+  .day {
+    width: 100%;             
+    min-width: 100%;        
+  }
+
+  .zoomed {
+    font-size: 1.2em;        
+  }
+
+  .inline-form input,
+  .inline-form select,
+  .inline-form button {
+    width: 100%;             
+    padding: 12px;          
+    margin-bottom: 10px;     
+  }
+
   .inline-form {
     flex-direction: column; 
     align-items: stretch; 
