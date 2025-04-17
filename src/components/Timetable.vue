@@ -40,9 +40,10 @@
 </div>
 
 
-      <div class="remove-button-container">
+      <div v-if="selectedDay && hasSelectedSubjects" class="remove-button-container">
         <button @click="removeSelectedSubjects" class="remove-btn">Remove</button>
       </div>
+
     </div>
   </div>
 </template>
@@ -70,6 +71,12 @@ export default {
       selectedDay: null
     }
   },
+
+  computed: {
+    hasSelectedSubjects() {
+      return this.selectedDay && this.timetable[this.selectedDay]?.some(subject => subject.selected);
+    }
+  },
   methods: {
     selectDay(day) {
       this.selectedDay = day; 
@@ -95,6 +102,21 @@ export default {
     if (this.selectedDay) {
       this.timetable[this.selectedDay] = this.timetable[this.selectedDay].filter(subject => !subject.selected);
       }
+    }
+  }, //Load timetable from local storage on component mount
+  mounted() {
+    const savedTimetable = localStorage.getItem('timetable');
+    if (savedTimetable) {
+      this.timetable = JSON.parse(savedTimetable);
+    }
+  },
+  // Save timetable to local storage whenever it changes
+  watch: {
+    timetable: {
+      handler(newValue) {
+        localStorage.setItem('timetable', JSON.stringify(newValue));
+      },
+      deep: true
     }
   }
 }
